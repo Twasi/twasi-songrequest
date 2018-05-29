@@ -41,3 +41,4 @@ or any operational keyword:
 - `skip`: Skip the current playing song. This can only be executed with moderation rights.
 - `clear`: This clears the entire list. Careful with that one!
 - `revert`, `wrongsong`, `oops`: This removes your latest song from the request list.
+- `voteskip`: Vote to skip this song. You can set options in the panel (e.g. what percentage of viewer need to vote skip)
