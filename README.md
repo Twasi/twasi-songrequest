@@ -12,7 +12,7 @@ Twasi will support the following music providers:
 Twasi tries to fit best in every streamers scenario. We want to allow cross requests, so that users can request songs from spotify or youtube on the same line.
 
 ## Commands
-There are many ways to write a song request command nowadays. And guess what: Twasi supports nearly all of them!
+There are many ways to write a song request command nowadays. And guess what: Twasi supports almost all of them!
 
 The first part of the command has to be one of the following:
 
