@@ -1,0 +1,25 @@
+name: songrequest
+main: net.twasiplugin.songrequest.Songrequest
+author: Twasi Team
+description: Let your viewers request the beat!
+version: 1.0
+
+messageHandler: false
+
+commands:
+  - songrequest
+  - requestsong
+  - sr
+  - rs
+  - request
+
+permissions:
+  - songrequest.user.request # Request a song
+  - songrequest.user.status # Get current status
+  - songrequest.user.next # Shows status of the next song
+  - songrequest.user.info # Shows info about a requested song
+  - songrequest.user.voteskip # Votes to skip the current song
+  - songrequest.user.deleteOwn # Allows to remove own songs
+  - songrequest.mod.clear # Clear the whole list
+  - songrequest.mod.delete # Removes a song from the list
+  - songrequest.mod.skip # Skips the current song
