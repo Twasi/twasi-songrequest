@@ -1,8 +1,15 @@
 package net.twasiplugin.songrequest;
 
+import net.twasi.core.graphql.GraphQLEndpoint;
+import net.twasi.core.graphql.WebInterfaceApp;
 import net.twasi.core.logger.TwasiLogger;
 import net.twasi.core.plugin.TwasiPlugin;
 import net.twasi.core.plugin.api.TwasiUserPlugin;
+import net.twasiplugin.songrequest.tsss.websocket.SongrequestSocketServlet;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,9 +41,9 @@ public class Songrequest extends TwasiPlugin {
         try {
             config.load(new FileInputStream(configFile));
         } catch (FileNotFoundException e) {
-            TwasiLogger.log.error("songrequest.properties file not found. Please create that first and then try to active Songrequest again.", e);
+            TwasiLogger.log.error("songrequest.properties file not found. Please create that first and then try to active Songrequest again. Path: " + configFile.getAbsolutePath(), e);
         } catch (IOException e) {
-            TwasiLogger.log.error("IOException while reading songrequest.properties.", e);
+            TwasiLogger.log.error("IOException while reading songrequest.properties. Path: " + configFile.getAbsolutePath(), e);
         }
 
         Arrays.stream(requiredProperties).forEach(prop -> {
@@ -44,6 +51,12 @@ public class Songrequest extends TwasiPlugin {
                 TwasiLogger.log.error("Key not found in config: " + prop);
             }
         });
+
+        // Register Servlet
+        ServletContextHandler handler = new ServletContextHandler(WebInterfaceApp.getServer(), "/");
+
+        handler.addServlet(GraphQLEndpoint.class, "/graphql");
+        handler.addServlet(SongrequestSocketServlet.class, "/songrequest");
     }
 
     @Override
