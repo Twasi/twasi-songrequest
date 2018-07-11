@@ -5,9 +5,12 @@ import net.twasi.core.graphql.WebInterfaceApp;
 import net.twasi.core.logger.TwasiLogger;
 import net.twasi.core.plugin.TwasiPlugin;
 import net.twasi.core.plugin.api.TwasiUserPlugin;
+import net.twasi.core.services.ServiceRegistry;
+import net.twasiplugin.songrequest.requestlist.RequestListService;
 import net.twasiplugin.songrequest.tsss.websocket.SongrequestSocketServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
@@ -37,6 +40,9 @@ public class Songrequest extends TwasiPlugin {
 
     @Override
     public void onActivate() {
+        // Register services
+        ServiceRegistry.register(new RequestListService());
+
         configFile = new File(getDataFolder().getPath() + "/songrequest.properties");
         try {
             config.load(new FileInputStream(configFile));
@@ -52,11 +58,8 @@ public class Songrequest extends TwasiPlugin {
             }
         });
 
-        // Register Servlet
-        ServletContextHandler handler = new ServletContextHandler(WebInterfaceApp.getServer(), "/");
-
-        handler.addServlet(GraphQLEndpoint.class, "/graphql");
-        handler.addServlet(SongrequestSocketServlet.class, "/songrequest");
+        TwasiLogger.log.debug("Registered /apis/songrequest servlet");
+        WebInterfaceApp.getServletHandler().addServlet(SongrequestSocketServlet.class, "/songrequest");
     }
 
     @Override

@@ -1,12 +1,9 @@
 package net.twasiplugin.songrequest.database;
 
 import net.twasi.core.database.models.BaseEntity;
-import net.twasi.core.database.models.User;
 import net.twasiplugin.songrequest.object.Song;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Reference;
-
 import java.util.ArrayList;
 import java.util.List;
 

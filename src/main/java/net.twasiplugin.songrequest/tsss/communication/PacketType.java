@@ -17,6 +17,10 @@ public enum PacketType {
 
     // Server -> Client
     confirmExecution,
-    status
+    status,
+
+    // Both
+    ping,
+    pong
 
 }

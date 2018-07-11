@@ -30,6 +30,6 @@ public class YoutubeSong implements Song {
 
     @Override
     public ProviderType getProvider() {
-        return ProviderType.Youtube;
+        return ProviderType.YouTube;
     }
 }

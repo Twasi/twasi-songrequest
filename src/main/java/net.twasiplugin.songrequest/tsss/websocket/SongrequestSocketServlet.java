@@ -9,10 +9,7 @@ public class SongrequestSocketServlet extends WebSocketServlet {
     public void configure(WebSocketServletFactory factory) {
         // set a 10 second timeout
         factory.getPolicy().setIdleTimeout(10000);
-
         TwasiLogger.log.debug("Songrequest Websocket API configured.");
-
-        // register MyEchoSocket as the WebSocket to create on Upgrade
         factory.register(SongrequestSocket.class);
     }
 }

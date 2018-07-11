@@ -3,16 +3,15 @@ package net.twasiplugin.songrequest.tsss.websocket;
 import com.google.gson.Gson;
 import net.twasiplugin.songrequest.tsss.api.SongrequestController;
 import net.twasiplugin.songrequest.tsss.communication.BasePacket;
+import net.twasiplugin.songrequest.tsss.communication.PacketType;
 import net.twasiplugin.songrequest.tsss.communication.client.SignIn;
 import net.twasiplugin.songrequest.tsss.communication.master.Seek;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
 
 public class SongrequestSocket extends WebSocketAdapter {
     private SongrequestController controller;
-    private RemoteEndpoint remote = getRemote();
 
     @Override
     public void onWebSocketText(String message) {
@@ -47,14 +46,19 @@ public class SongrequestSocket extends WebSocketAdapter {
                 case requestStatus:
                     controller.requestStatus();
                     break;
+                case ping:
+                    sendObject(new BasePacket(PacketType.pong));
+                    break;
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
     public void sendObject(Object o) throws IOException {
-        remote.sendString(new Gson().toJson(o));
+        getRemote().sendString(new Gson().toJson(o) + "\n");
     }
 }
