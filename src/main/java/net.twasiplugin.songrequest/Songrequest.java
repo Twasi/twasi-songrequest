@@ -8,7 +8,9 @@ import net.twasi.core.plugin.api.TwasiUserPlugin;
 import net.twasi.core.services.ServiceRegistry;
 import net.twasiplugin.songrequest.requestlist.RequestListService;
 import net.twasiplugin.songrequest.tsss.websocket.SongrequestSocketServlet;
+import net.twasiplugin.songrequest.web.SongrequestHandler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -60,6 +62,12 @@ public class Songrequest extends TwasiPlugin {
 
         TwasiLogger.log.debug("Registered /apis/songrequest servlet");
         WebInterfaceApp.getServletHandler().addServlet(SongrequestSocketServlet.class, "/songrequest");
+
+        // Register REST Api
+        ContextHandler handler = new ContextHandler();
+        handler.setContextPath("/plugins/songrequest");
+        handler.setHandler(new SongrequestHandler());
+        WebInterfaceApp.getHandlers().addHandler(handler);
     }
 
     @Override
