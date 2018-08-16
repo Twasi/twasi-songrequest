@@ -6,6 +6,8 @@ import net.twasi.core.plugin.api.events.TwasiCommandEvent;
 import net.twasi.core.plugin.api.events.TwasiEnableEvent;
 import net.twasi.core.plugin.api.events.TwasiInstallEvent;
 import net.twasi.core.services.ServiceRegistry;
+import net.twasiplugin.songrequest.api.YoutubeAPI;
+import net.twasiplugin.songrequest.object.YoutubeSong;
 import net.twasiplugin.songrequest.requestlist.RequestList;
 import net.twasiplugin.songrequest.requestlist.RequestListService;
 import net.twasiplugin.songrequest.tsss.api.PlayerStatus;
@@ -73,7 +75,7 @@ public class SongrequestUP extends TwasiUserPlugin {
                 cmd.reply(getVoteSkipResponse());
                 return;
             }
-            cmd.reply(requestSong(splitted[1]));
+            cmd.reply(requestSong(splitted[1], cmd.getSender().getUserName()));
             return;
         }
         if (splitted.length == 3) {
@@ -85,13 +87,23 @@ public class SongrequestUP extends TwasiUserPlugin {
                 cmd.reply(getDeleteResponse(splitted[2]));
                 return;
             }
-            cmd.reply(requestSong(splitted[1] + " " + splitted[2]));
+            cmd.reply(requestSong(splitted[1] + " " + splitted[2], cmd.getSender().getUserName()));
             return;
         }
     }
 
-    String requestSong(String reference) {
-        return "Not implemented: request(" + reference + ")";
+    String requestSong(String reference, String requester) {
+        if (reference.startsWith("https://youtube.com/watch?v=") || reference.startsWith("https://youtu.be/")) {
+        } else {
+            YoutubeSong song = YoutubeAPI.getByTerm(reference, requester);
+
+            if (song == null) {
+                return "No song found.";
+            }
+
+            return "Song added: " + song.getTitle();
+        }
+        return "Unknown request format.";
     }
 
     String getSongList() {
@@ -99,10 +111,10 @@ public class SongrequestUP extends TwasiUserPlugin {
     }
 
     String getCurrentStatusDescription() {
-        if (list.getStatus() == PlayerStatus.WAITING) {
+        if (list.getPlaybackStatus() == PlayerStatus.WAITING) {
             return "Waiting for requests";
         }
-        return "Status: " + list.getStatus().toString() + ", Seconds: " + list.getSeconds() + ", Title: " + list.getCurrentSong().getTitle();
+        return "Status: " + list.getPlaybackStatus().toString() + ", Seconds: " + list.getSeconds() + ", Title: " + list.getCurrentSong().getTitle();
     }
 
     String getNextSongDescription() {

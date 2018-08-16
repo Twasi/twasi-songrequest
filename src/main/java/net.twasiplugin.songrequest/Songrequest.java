@@ -6,6 +6,7 @@ import net.twasi.core.logger.TwasiLogger;
 import net.twasi.core.plugin.TwasiPlugin;
 import net.twasi.core.plugin.api.TwasiUserPlugin;
 import net.twasi.core.services.ServiceRegistry;
+import net.twasiplugin.songrequest.api.YoutubeAPI;
 import net.twasiplugin.songrequest.requestlist.RequestListService;
 import net.twasiplugin.songrequest.tsss.websocket.SongrequestSocketServlet;
 import net.twasiplugin.songrequest.web.SongrequestHandler;
@@ -24,7 +25,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public class Songrequest extends TwasiPlugin {
-    private Properties config = new Properties();
+    public static Properties config = new Properties();
     private File configFile;
 
     private String[] requiredProperties = {
@@ -59,6 +60,8 @@ public class Songrequest extends TwasiPlugin {
                 TwasiLogger.log.error("Key not found in config: " + prop);
             }
         });
+
+        YoutubeAPI.setUp();
 
         TwasiLogger.log.debug("Registered /apis/songrequest servlet");
         WebInterfaceApp.getServletHandler().addServlet(SongrequestSocketServlet.class, "/songrequest");
