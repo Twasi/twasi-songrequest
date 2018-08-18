@@ -101,6 +101,8 @@ public class SongrequestUP extends TwasiUserPlugin {
                 return "No song found.";
             }
 
+            list.request(song);
+
             return "Song added: " + song.getTitle();
         }
         return "Unknown request format.";

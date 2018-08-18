@@ -10,18 +10,13 @@ import net.twasiplugin.songrequest.object.Song;
 import net.twasiplugin.songrequest.tsss.api.PlayerStatus;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RequestList extends ApiDTO {
-    private List<Song> nextSongs;
-    private List<Song> previousSongs;
-
-    private Song currentSong = null;
+    private SongrequestData data;
 
     // State to current playback
     private PlayerStatus playbackStatus = PlayerStatus.WAITING;
-    private int seconds = 0;
 
     @JsonIgnore
     private ObjectId userId;
@@ -32,32 +27,34 @@ public class RequestList extends ApiDTO {
 
     public void loadForUser(ObjectId userId) {
         SongrequestRepo repo = ServiceRegistry.get(DataService.class).get(SongrequestRepo.class);
-        SongrequestData data = repo.getByUser(userId);
+        data = repo.getByUser(userId);
 
         this.userId = userId;
-        nextSongs = data.getNextSongs();
-        previousSongs = data.getPreviousSongs();
-        currentSong = data.getCurrentSong();
+    }
 
-        seconds = data.getSeconds();
+    public void request(Song song) {
+        data.getNextSongs().add(song);
+
+        save();
+    }
+
+    public void save() {
+        ServiceRegistry.get(DataService.class).get(SongrequestRepo.class).commit(data);
+
+        // Reload data
+        loadForUser(userId);
     }
 
     public List<Song> getNextSongs() {
-        if (nextSongs == null) {
-            nextSongs = new ArrayList<>();
-        }
-        return nextSongs;
+        return data.getNextSongs();
     }
 
     public List<Song> getPreviousSongs() {
-        if (previousSongs == null) {
-            previousSongs = new ArrayList<>();
-        }
-        return previousSongs;
+        return data.getPreviousSongs();
     }
 
     public Song getCurrentSong() {
-        return currentSong;
+        return data.getCurrentSong();
     }
 
     public PlayerStatus getPlaybackStatus() {
@@ -65,7 +62,7 @@ public class RequestList extends ApiDTO {
     }
 
     public int getSeconds() {
-        return seconds;
+        return data.getSeconds();
     }
 
     public ObjectId getUserId() {

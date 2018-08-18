@@ -8,10 +8,12 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.VideoListResponse;
 import net.twasiplugin.songrequest.Songrequest;
 import net.twasiplugin.songrequest.object.YoutubeSong;
 
 import java.io.IOException;
+import java.time.Duration;
 
 public class YoutubeAPI {
     private static YouTube youtube;
@@ -48,10 +50,19 @@ public class YoutubeAPI {
 
             SearchResult result = searchResponse.getItems().get(0);
 
+            // We need to query the video directly to get contentDetails
+            YouTube.Videos.List singleVideoRequest = youtube.videos().list("contentDetails");
+            singleVideoRequest.setId(result.getId().getVideoId());
+            singleVideoRequest.setKey(key);
+
+            VideoListResponse response = singleVideoRequest.execute();
+            System.out.println(response.getItems().get(0).getContentDetails().getDuration());
+            Duration duration = Duration.parse(response.getItems().get(0).getContentDetails().getDuration());
+
             YoutubeSong song = new YoutubeSong();
             song.setTitle(result.getSnippet().getTitle());
             song.setAuthor(result.getSnippet().getChannelTitle());
-            song.setLength(1337);
+            song.setLength(Integer.valueOf(String.valueOf(duration.getSeconds())));
             song.setRequester(requester);
             song.setVideoId(result.getId().getVideoId());
             return song;
