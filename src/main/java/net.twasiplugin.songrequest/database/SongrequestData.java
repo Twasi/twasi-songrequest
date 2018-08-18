@@ -35,10 +35,18 @@ public class SongrequestData extends BaseEntity {
     }
 
     public List<Song> getNextSongs() {
+        if (nextSongs == null) {
+            nextSongs = new ArrayList<>();
+        }
+
         return nextSongs;
     }
 
     public List<Song> getPreviousSongs() {
+        if (previousSongs == null) {
+            previousSongs = new ArrayList<>();
+        }
+
         return previousSongs;
     }
 

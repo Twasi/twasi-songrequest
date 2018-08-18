@@ -1,5 +1,7 @@
 package net.twasiplugin.songrequest.tsss.api;
 
+import net.twasiplugin.songrequest.requestlist.RequestList;
+
 public interface SongrequestController {
     boolean signIn(String jwt);
 
@@ -13,5 +15,6 @@ public interface SongrequestController {
 
     // Client options (no need to sign in)
     PlaybackStatus requestStatus();
-    boolean join(String name);
+
+    RequestList getRequestList();
 }

@@ -1,20 +1,32 @@
 package net.twasiplugin.songrequest.tsss.api;
 
-public class SongrequestControllerImpl implements SongrequestController {
-    private String channel = null;
-    private boolean isSignedIn = false;
+import net.twasi.core.database.models.User;
+import net.twasi.core.database.repositories.UserRepository;
+import net.twasi.core.services.ServiceRegistry;
+import net.twasi.core.services.providers.DataService;
+import net.twasiplugin.songrequest.requestlist.RequestList;
+import net.twasiplugin.songrequest.requestlist.RequestListService;
 
-    @Override
-    public boolean join(String twitchname) {
-        return false;
+public class SongrequestControllerImpl implements SongrequestController {
+    private String twitchId = null;
+    private boolean isSignedIn = false;
+    private RequestList list;
+
+    public SongrequestControllerImpl(String twitchId) {
+        this.twitchId = twitchId;
+
+        User user = ServiceRegistry.get(DataService.class).get(UserRepository.class).getByTwitchId(twitchId);
+
+        list = ServiceRegistry.get(RequestListService.class).getRequestListForUser(user.getId());
+    }
+
+    public RequestList getRequestList() {
+        return list;
     }
 
     @Override
     public boolean signIn(String jwt) {
-        if (!isReady()) {
-            return false;
-        }
-        return false;
+        return true;
     }
 
     @Override
@@ -67,20 +79,10 @@ public class SongrequestControllerImpl implements SongrequestController {
 
     @Override
     public PlaybackStatus requestStatus() {
-        if (!isReady()) {
-            return null;
-        }
         return null;
     }
 
-    public boolean isReady() {
-        return channel != null;
-    }
-
     public boolean isSignedIn() {
-        if (!isReady()) {
-            return false;
-        }
         return isSignedIn;
     }
 }

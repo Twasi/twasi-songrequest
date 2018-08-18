@@ -3,6 +3,7 @@ package net.twasiplugin.songrequest.tsss.communication;
 public enum PacketType {
 
     // Client -> Server
+    selectChannel,
     signIn,
 
     startPlayback,

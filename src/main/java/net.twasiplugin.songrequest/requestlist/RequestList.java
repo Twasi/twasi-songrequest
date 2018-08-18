@@ -8,12 +8,18 @@ import net.twasiplugin.songrequest.database.SongrequestData;
 import net.twasiplugin.songrequest.database.SongrequestRepo;
 import net.twasiplugin.songrequest.object.Song;
 import net.twasiplugin.songrequest.tsss.api.PlayerStatus;
+import net.twasiplugin.songrequest.tsss.websocket.SongrequestSocket;
 import org.bson.types.ObjectId;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestList extends ApiDTO {
     private SongrequestData data;
+
+    @JsonIgnore
+    private List<SongrequestSocket> sockets = new ArrayList<>();
 
     // State to current playback
     private PlayerStatus playbackStatus = PlayerStatus.WAITING;
@@ -36,6 +42,7 @@ public class RequestList extends ApiDTO {
         data.getNextSongs().add(song);
 
         save();
+        broadcastStatus();
     }
 
     public void save() {
@@ -43,6 +50,16 @@ public class RequestList extends ApiDTO {
 
         // Reload data
         loadForUser(userId);
+    }
+
+    public void broadcastStatus() {
+        sockets.forEach(socket -> {
+            try {
+                socket.sendObject("Status test: " + getPlaybackStatus().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public List<Song> getNextSongs() {
@@ -67,5 +84,9 @@ public class RequestList extends ApiDTO {
 
     public ObjectId getUserId() {
         return userId;
+    }
+
+    public List<SongrequestSocket> getSockets() {
+        return sockets;
     }
 }

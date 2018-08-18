@@ -1,9 +1,12 @@
 package net.twasiplugin.songrequest.tsss.websocket;
 
 import com.google.gson.Gson;
+import net.twasi.core.logger.TwasiLogger;
 import net.twasiplugin.songrequest.tsss.api.SongrequestController;
+import net.twasiplugin.songrequest.tsss.api.SongrequestControllerImpl;
 import net.twasiplugin.songrequest.tsss.communication.BasePacket;
 import net.twasiplugin.songrequest.tsss.communication.PacketType;
+import net.twasiplugin.songrequest.tsss.communication.client.SelectChannel;
 import net.twasiplugin.songrequest.tsss.communication.client.SignIn;
 import net.twasiplugin.songrequest.tsss.communication.master.Seek;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
@@ -20,6 +23,13 @@ public class SongrequestSocket extends WebSocketAdapter {
 
         try {
             switch (packet.getType()) {
+                case selectChannel:
+                    SelectChannel channelPacket = new Gson().fromJson(message, SelectChannel.class);
+                    controller = new SongrequestControllerImpl(channelPacket.getChannel());
+                    controller.getRequestList().getSockets().add(this);
+                    TwasiLogger.log.debug("New Songrequest-Socket connected to channel " + channelPacket.getChannel() + " userId = " + controller.getRequestList().getUserId());
+                    sendObject(true);
+                    break;
                 case signIn:
                     SignIn signInPacket = new Gson().fromJson(message, SignIn.class);
                     sendObject(controller.signIn(signInPacket.getJwt()));
@@ -56,6 +66,12 @@ public class SongrequestSocket extends WebSocketAdapter {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onWebSocketClose(int statusCode, String reason) {
+        controller.getRequestList().getSockets().remove(this);
+        TwasiLogger.log.debug("Songrequest-Socket disconnected from userId = " + controller.getRequestList().getUserId());
     }
 
     public void sendObject(Object o) throws IOException {
