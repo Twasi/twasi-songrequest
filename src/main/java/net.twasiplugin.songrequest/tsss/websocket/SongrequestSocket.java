@@ -27,7 +27,7 @@ public class SongrequestSocket extends WebSocketAdapter {
                     SelectChannel channelPacket = new Gson().fromJson(message, SelectChannel.class);
                     controller = new SongrequestControllerImpl(channelPacket.getChannel());
                     controller.getRequestList().getSockets().add(this);
-                    TwasiLogger.log.debug("New Songrequest-Socket connected to channel " + channelPacket.getChannel() + " userId = " + controller.getRequestList().getUserId());
+                    TwasiLogger.log.debug("New songrequest-websocket connected to channel " + channelPacket.getChannel() + " userId = " + controller.getRequestList().getUserId());
                     sendObject(true);
                     break;
                 case signIn:
@@ -71,7 +71,7 @@ public class SongrequestSocket extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         controller.getRequestList().getSockets().remove(this);
-        TwasiLogger.log.debug("Songrequest-Socket disconnected from userId = " + controller.getRequestList().getUserId());
+        TwasiLogger.log.debug("Songrequest-websocket disconnected from userId = " + controller.getRequestList().getUserId());
     }
 
     public void sendObject(Object o) throws IOException {

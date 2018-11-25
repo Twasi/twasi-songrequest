@@ -3,7 +3,6 @@ package net.twasiplugin.songrequest.requestlist;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.twasi.core.services.ServiceRegistry;
 import net.twasi.core.services.providers.DataService;
-import net.twasi.core.webinterface.dto.ApiDTO;
 import net.twasiplugin.songrequest.database.SongrequestData;
 import net.twasiplugin.songrequest.database.SongrequestRepo;
 import net.twasiplugin.songrequest.object.Song;
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestList extends ApiDTO {
+public class RequestList {
     private SongrequestData data;
 
     @JsonIgnore
@@ -28,7 +27,6 @@ public class RequestList extends ApiDTO {
     private ObjectId userId;
 
     public RequestList() {
-        super(true);
     }
 
     public void loadForUser(ObjectId userId) {

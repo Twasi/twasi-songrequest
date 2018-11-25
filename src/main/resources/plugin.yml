@@ -23,3 +23,29 @@ permissions:
   - songrequest.mod.clear # Clear the whole list
   - songrequest.mod.delete # Removes a song from the list
   - songrequest.mod.skip # Skips the current song
+
+api: |
+    type Songrequest {
+      requests: [SongrequestRequest],
+      current: SongrequestStatus
+    }
+
+    type SongrequestRequest {
+      song: SongrequestSong
+    }
+
+    type SongrequestStatus {
+      status: SongrequestStatusType,
+      secondsIn: Int,
+      request: SongrequestRequest
+    }
+
+    enum SongrequestStatusType {
+      PLAYING,
+      PAUSED,
+      WAITING
+    }
+
+    type SongrequestSong {
+      name: String
+    }
