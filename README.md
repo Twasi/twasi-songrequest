@@ -1,2 +1,2 @@
 # Twasi-Songrequest
-For documentation, see https://docs.twasi.net/en/official-plugins/user-docs/songrequest.html
+For documentation, see https://docs.twasi.net/user-docs/plugins/songrequest.html
